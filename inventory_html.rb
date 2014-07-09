@@ -62,51 +62,11 @@ border:.5pt solid;background:#000000;
 
       nodes = Hash.new
       content = ""
-      defaultNodes = 0
-      ct_entdevNodes = 0
-      ct_entdev2Nodes = 0
-      ct_entprodNodes = 0
-      ct_entqa = 0
-      ct_entqa2 = 0
-      ct_misc = 0
-      ct_staging = 0
-      etdev1 = 0
-      etdev2 = 0
-      etpv = 0
-      nvps = 0
-      nvqa = 0
-      nvqa2s1 = 0
-      nvqa2s2 = 0
-      xtins1 = 0
-      xtins1test = 0
-      xtins1x = 0
-      xtins6 = 0
-      xtnvdr1 = 0
-      xtnvs4 = 0
-      xtnvs5 = 0
-      s1nodes = 0
-      s6nodes = 0
-      unknownEnvironment = 0
 
       ubuntuNodes = 0
       centosNodes = 0
       redhatNodes = 0
-      unknownOs = 0
-
-      xtins1hc1Nodes = 0
-      xtins1hc2Nodes = 0
-      etinhc1Nodes = 0
-      nvqa2s1hc1Nodes = 0
-      nvqa2s1hc2Nodes = 0
-      nvqa2s2hc1Nodes = 0
-      nvqa2s2hc2Nodes = 0
-      xtinp2hc1Nodes = 0
-      xtinp2hc2Nodes = 0
-      xtnvhc1Nodes = 0
-      xtnvhc2Nodes = 0
-
-      nodesWithProxy = 0
-      nodesWithoutProxy = 0
+      unknownOS = 0
 
       totalNodes = 0
 
@@ -129,14 +89,6 @@ border:.5pt solid;background:#000000;
         df_gateway = node.fetch('network', {})['default_gateway'] || 'empty'
         chef_version = node.fetch('chef_packages', {}).fetch('chef', {})['version'] || 'empty'
 
-	if node.run_list.recipes.include?("proxy")
-	  has_proxy="yes"
-	  nodesWithProxy += 1
-	else
-	  has_proxy="no"
-	  nodesWithoutProxy += 1
-	end
-
 	if platform == "ubuntu"
 	  ubuntuNodes += 1
 	elsif platform == "centos"
@@ -144,11 +96,11 @@ border:.5pt solid;background:#000000;
 	elsif platform == "redhat"
 	  redhatNodes += 1
 	else
-	  unknownOs += 1
+	  unknownOS += 1
 	end
 
 	content += "  <tr>
-  <td class=colnames>#{name}</td><td class=colnames>#{fqdn}</td><td class=colnames>#{has_proxy}</td><td class=colnames>#{environment}</td><td class=colnames>#{roles}</td><td class=colnames>#{run_list}</td><td class=colnames>#{platform}</td><td class=colnames>#{platform_ver}</td><td class=colnames>#{kernel}</td><td class=colnames>#{cpu_num}</td><td class=colnames>#{ram}</td><td class=colnames>#{swap}</td><td class=colnames>#{ip}</td><td class=colnames>#{macaddress}</td><td class=colnames>#{df_gateway}</td><td class=colnames>#{chef_version}</td>
+  <td class=colnames>#{fqdn}</td><td class=colnames>#{environment}</td><td class=colnames>#{roles}</td><td class=colnames>#{run_list}</td><td class=colnames>#{platform}</td><td class=colnames>#{platform_ver}</td><td class=colnames>#{kernel}</td><td class=colnames>#{cpu_num}</td><td class=colnames>#{ram}</td><td class=colnames>#{swap}</td><td class=colnames>#{ip}</td><td class=colnames>#{macaddress}</td><td class=colnames>#{df_gateway}</td><td class=colnames>#{chef_version}</td>
 </tr>\n"
       end
     countsTop = "<table border=0 cellpadding=0 cellspacing=0 style=\'border-collapse:collapse;\'>
@@ -158,22 +110,17 @@ border:.5pt solid;background:#000000;
     </table>
   </td>&nbsp;&nbsp;&nbsp&nbsp;&nbsp;<td>
     <table border=0 cellpadding=3 cellspacing=10 width=100% style=\'border-collapse:collapse;\'>
-      <tr><td class=colnames>Nodes With Proxy</td><td class=colnames>#{nodesWithProxy}</td></tr>
-      <tr><td class=colnames>Nodes Without Proxy</td><td class=colnames>#{nodesWithoutProxy}</td></tr>
-    </table>
-  </td>&nbsp;&nbsp;&nbsp&nbsp;&nbsp;<td>
-    <table border=0 cellpadding=3 cellspacing=10 width=100% style=\'border-collapse:collapse;\'>
       <tr><td class=colname>OS</td><td class=colname>Count</td></tr>
       <tr><td class=colnames>Ubuntu</td><td class=colnames>#{ubuntuNodes}</td></tr>
       <tr><td class=colnames>CentOS</td><td class=colnames>#{centosNodes}</td></tr>
       <tr><td class=colnames>RedHat</td><td class=colnames>#{redhatNodes}</td></tr>
-      <tr><td class=colnames>Unknown</td><td class=colnames>#{unknownOs}</td></tr>
+      <tr><td class=colnames>Unknown</td><td class=colnames>#{unknownOS}</td></tr>
     </table>
   </td></tr>
 </table>"
 
     contentTop = "<table border=0 cellpadding=0 cellspacing=0 width=100% style=\'border-collapse:collapse;\'>
-<tr><th class=heading>Name</th><th class=heading>FQDN</th><th class=heading>Proxy</th><th class=heading>Environment</th><th class=heading>Roles</th><th class=heading>Run List</th><th class=heading>Platform</th><th class=heading>Version</th><th class=heading>Kernel</th><th class=heading>CPUs</th><th class=heading>Memory</th><th class=heading>Swap</th><th class=heading>IP</th><th class=heading>MAC</th><th class=heading>Gateway</th><th class=heading>Chef Version</th></tr>"
+<tr><th class=heading>FQDN</th><th class=heading>Environment</th><th class=heading>Roles</th><th class=heading>Run List</th><th class=heading>Platform</th><th class=heading>Version</th><th class=heading>Kernel</th><th class=heading>CPUs</th><th class=heading>Memory</th><th class=heading>Swap</th><th class=heading>IP</th><th class=heading>MAC</th><th class=heading>Gateway</th><th class=heading>Chef Version</th></tr>"
     footer = "</table>\n</body>\n</html>\n"
 
     print "#{pageHeader}\n#{countsTop}\n#{contentTop}\n#{content}\n#{footer}"
