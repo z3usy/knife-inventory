@@ -114,30 +114,20 @@ border:.5pt solid;background:#000000;
 	node = n unless n.nil?
 	totalNodes += 1
 
-      ##THIS COULD BE BETTER
-	defined?(node.name) || node.name = "empty"
-	defined?(node.fqdn) || node.fqdn = "empty"
-	defined?(node.chef_environment) || node.chef_environment = "empty"
-	defined?(node.run_list) || node.run_list = "empty"
-	defined?(node.roles) || node.roles = "empty"
-	defined?(node.kernel) || node.kernel = Hash.new
-	defined?(node.kernel.release) || node.kernel.release = "empty"
-	defined?(node.platform) || node.platform = "empty"
-	defined?(node.platform_version) || node.platform_version = "empty"
-	defined?(node.ipaddress) || node.ipaddress = "empty"
-	defined?(node.macaddress) || node.macaddress = "empty"
-	defined?(node.memory) || node.memory = Hash.new
-	defined?(node.memory.total) || node.memory.total = "empty"
-	defined?(node.memory.swap) || node.memory.swap = Hash.new
-	defined?(node.memory.swap.total) || node.memory.swap.total = "empty"
-	defined?(node.network) || node.network = Hash.new
-        defined?(node.network.default_interface) || node.network.default_interface = "empty"
-	defined?(node.network.default_gateway) || node.network.default_gateway = "empty"
-	defined?(node.chef_packages) || node.chef_packages = Hash.new
-	defined?(node.chef_packages.chef) || node.chef_packages.chef = Hash.new
-	defined?(node.chef_packages.chef.version) || node.chef_packages.chef.version = "empty"
-	defined?(node.cpu) || node.cpu = Hash.new
-	defined?(node.cpu.total) || node.cpu.total = "empty"
+        fqdn = node['fqdn'] || 'empty'
+        environment = node['chef_environment'] || 'empty'
+        roles = node['roles'] || 'empty'
+        run_list = node['run_list'] || 'empty'
+        platform = node['platform'] || 'empty'
+        platform_ver = node['platform_version'] || 'empty'
+        kernel = node.fetch('kernel', {})['release'] || 'empty'
+        cpu_num = node['cpu']['total'] || 'empty'
+        ram = node.fetch('memory', {})['total'] || 'empty'
+        swap = node.fetch('memory', {}).fetch('swap', {})['total'] || 'empty'
+        ip = node['ipaddress'] || 'empty'
+        macaddress = node['macaddress'] || 'empty'
+        df_gateway = node.fetch('network', {})['default_gateway'] || 'empty'
+        chef_version = node.fetch('chef_packages', {}).fetch('chef', {})['version'] || 'empty'
 
 	if node.run_list.recipes.include?("proxy")
 	  has_proxy="yes"
@@ -146,23 +136,6 @@ border:.5pt solid;background:#000000;
 	  has_proxy="no"
 	  nodesWithoutProxy += 1
 	end
-
-	name = node.name
-	fqdn = node.fqdn
-	environment = node.chef_environment
-	run_list = node.run_list
-	roles = node.roles
-	kernel = node.kernel.release
-	platform = node.platform
-	platform_ver = node.platform_version
-	ip = node.ipaddress
-	ram = node.memory.total
-	swap = node.memory.swap.total
-	default_nic = node.network.default_interface
-	macaddress = node.macaddress
-	df_gateway = node.network.default_gateway
-	chef_version = node.chef_packages.chef.version
-	cpu_num = node.cpu.total
 
 	if platform == "ubuntu"
 	  ubuntuNodes += 1
