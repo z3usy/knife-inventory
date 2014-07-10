@@ -27,9 +27,9 @@ module Limelight
         node = n unless n.nil?
 
         fqdn = node['fqdn'] || 'empty'
-        environment = node['chef_environment'] || 'empty'
+        environment = node.chef_environment || 'empty'
         roles = node['roles'] || 'empty'
-        run_list = node['run_list'] || 'empty'
+        run_list = node.run_list || 'empty'
         platform = node['platform'] || 'empty'
         platform_ver = node['platform_version'] || 'empty'
         kernel = node.fetch('kernel', {})['release'] || 'empty'

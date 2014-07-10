@@ -71,13 +71,13 @@ border:.5pt solid;background:#000000;
       totalNodes = 0
 
       Chef::Search::Query.new.search(:node, "name:*") do |n|
-	node = n unless n.nil?
-	totalNodes += 1
+      node = n unless n.nil?
+      totalNodes += 1
 
         fqdn = node['fqdn'] || 'empty'
-        environment = node['chef_environment'] || 'empty'
+        environment = node.chef_environment || 'empty'
         roles = node['roles'] || 'empty'
-        run_list = node['run_list'] || 'empty'
+        run_list = node.run_list || 'empty'
         platform = node['platform'] || 'empty'
         platform_ver = node['platform_version'] || 'empty'
         kernel = node.fetch('kernel', {})['release'] || 'empty'
@@ -89,17 +89,17 @@ border:.5pt solid;background:#000000;
         df_gateway = node.fetch('network', {})['default_gateway'] || 'empty'
         chef_version = node.fetch('chef_packages', {}).fetch('chef', {})['version'] || 'empty'
 
-	if platform == "ubuntu"
-	  ubuntuNodes += 1
-	elsif platform == "centos"
-	  centosNodes += 1
-	elsif platform == "redhat"
-	  redhatNodes += 1
-	else
-	  unknownOS += 1
-	end
+    if platform == "ubuntu"
+          ubuntuNodes += 1
+    elsif platform == "centos"
+          centosNodes += 1
+    elsif platform == "redhat"
+          redhatNodes += 1
+    else
+          unknownOS += 1
+    end
 
-	content += "  <tr>
+    content += "  <tr>
   <td class=colnames>#{fqdn}</td><td class=colnames>#{environment}</td><td class=colnames>#{roles}</td><td class=colnames>#{run_list}</td><td class=colnames>#{platform}</td><td class=colnames>#{platform_ver}</td><td class=colnames>#{kernel}</td><td class=colnames>#{cpu_num}</td><td class=colnames>#{ram}</td><td class=colnames>#{swap}</td><td class=colnames>#{ip}</td><td class=colnames>#{macaddress}</td><td class=colnames>#{df_gateway}</td><td class=colnames>#{chef_version}</td>
 </tr>\n"
       end
