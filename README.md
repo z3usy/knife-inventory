@@ -1,14 +1,11 @@
 knife-inventory
 ===============
 
-A Chef Knife Plugin to Inventory your environment and output to CSV
+A Chef Knife Plugin to Inventory Your Environment and Output to CSV or HTML
 
-
-## Place the files
+## Installation
 
 Copy these files to the plugin directory of your chef installation.
-
-You could also symlink the files in this repo, or simply specify this repo as a place to look for plugins in your knife configuration
 
 ## Usage
 
@@ -17,14 +14,16 @@ knife inventory
 knife inventory html
 ```
 
-Results will print to STDOUT, use ridirection to output to file or generate an email, for example...
+Results will print to STDOUT, use redirection to output to file or generate an email, for example...
 
 ```
-knife inventory > ~/chef/inventory/$(date +%Y-%m-%d).csv
+knife inventory > chef-inventory_$(date +%Y-%m-%d).csv
+knife inventory html > chef-inventory_$(date +%Y-%m-%d).html
 ```
 
 or
 
 ```
-knife inventory | mail -s "Chef Inventory Report for $(date +%Y-%m-%d)" user@example.com
+knife inventory | mail -s "Chef Inventory for $(date +%Y-%m-%d)" user@example.com
+knife inventory html | mail -s "Chef Inventory HTML for $(date +%Y-%m-%d)" user@example.com
 ```
