@@ -20,7 +20,7 @@ module Limelight
 
     def run
 
-      print "FQDN;Environment;Roles;Run List;Platform;Version;Kernel;CPUs;Memory;Swap;IP;MAC;Gateway;Chef Version\n"
+      print "FQDN;Chef;Environment;Roles;Run List;Platform;Version;Kernel;CPUs;Memory;Swap;IP;MAC;Gateway;Filesystem\n"
 
       nodes = Hash.new
       Chef::Search::Query.new.search(:node, "name:*.*") do |n|
@@ -41,7 +41,20 @@ module Limelight
         df_gateway = node.fetch('network', {})['default_gateway'] || 'empty'
         chef_version = node.fetch('chef_packages', {}).fetch('chef', {})['version'] || 'empty'
 
-        print "#{fqdn};#{environment};#{roles};#{run_list};#{platform};#{platform_ver};#{kernel};#{cpu_num};#{ram};#{swap};#{ip};#{macaddress};#{df_gateway};#{chef_version}\n"
+        all_fs = node.fetch('filesystem', {})
+
+        filtered_fs = all_fs.select do |volume, properties|
+          %w[xfs ext3 ext4].include?(properties['fs_type'])
+        end
+
+        fs_fields = %w[mount fs_type kb_size percent_used]
+        filtered_fs.each do |volume, properties|
+          filtered_fs[volume] = Hash[properties.select do |key, value|
+            fs_fields.include?(key)
+          end.sort_by { |key, value| fs_fields.index(key) }]
+        end
+
+        print "#{fqdn};#{chef_version};#{environment};#{roles};#{run_list};#{platform};#{platform_ver};#{kernel};#{cpu_num};#{ram};#{swap};#{ip};#{macaddress};#{df_gateway};#{filtered_fs}\n"
 
       end
     end

@@ -89,6 +89,19 @@ border:.5pt solid;background:#000000;
         df_gateway = node.fetch('network', {})['default_gateway'] || 'empty'
         chef_version = node.fetch('chef_packages', {}).fetch('chef', {})['version'] || 'empty'
 
+        all_fs = node.fetch('filesystem', {})
+
+        filtered_fs = all_fs.select do |volume, properties|
+          %w[xfs ext3 ext4].include?(properties['fs_type'])
+        end
+
+        fs_fields = %w[mount fs_type kb_size percent_used]
+        filtered_fs.each do |volume, properties|
+          filtered_fs[volume] = Hash[properties.select do |key, value|
+            fs_fields.include?(key)
+          end.sort_by { |key, value| fs_fields.index(key) }]
+        end
+
     if platform == "ubuntu"
           ubuntuNodes += 1
     elsif platform == "centos"
@@ -100,16 +113,16 @@ border:.5pt solid;background:#000000;
     end
 
     content += "  <tr>
-  <td class=colnames>#{fqdn}</td><td class=colnames>#{environment}</td><td class=colnames>#{roles}</td><td class=colnames>#{run_list}</td><td class=colnames>#{platform}</td><td class=colnames>#{platform_ver}</td><td class=colnames>#{kernel}</td><td class=colnames>#{cpu_num}</td><td class=colnames>#{ram}</td><td class=colnames>#{swap}</td><td class=colnames>#{ip}</td><td class=colnames>#{macaddress}</td><td class=colnames>#{df_gateway}</td><td class=colnames>#{chef_version}</td>
+  <td class=colnames>#{fqdn}</td><td class=colnames>#{chef_version}</td><td class=colnames>#{environment}</td><td class=colnames>#{roles}</td><td class=colnames>#{run_list}</td><td class=colnames>#{platform}</td><td class=colnames>#{platform_ver}</td><td class=colnames>#{kernel}</td><td class=colnames>#{cpu_num}</td><td class=colnames>#{ram}</td><td class=colnames>#{swap}</td><td class=colnames>#{ip}</td><td class=colnames>#{macaddress}</td><td class=colnames>#{df_gateway}</td><td class=colnames>#{filtered_fs}</td>
 </tr>\n"
       end
     countsTop = "<table border=0 cellpadding=0 cellspacing=0 style=\'border-collapse:collapse;\'>
   <tr><td>
     <table border=0 cellpadding=3 cellspacing=10 width=100% style=\'border-collapse:collapse;\'>
-      <tr><td class=colnames>Total Servers</td><td class=colnames>#{totalNodes}</td></tr>
     </table>
-  </td>&nbsp;&nbsp;&nbsp&nbsp;&nbsp;<td>
+  </td>&nbsp;&nbsp;&nbsp;&nbsp;<td>
     <table border=0 cellpadding=3 cellspacing=10 width=100% style=\'border-collapse:collapse;\'>
+      <tr><td class=colnames>Total Servers</td><td class=colnames>#{totalNodes}</td></tr>
       <tr><td class=colname>OS</td><td class=colname>Count</td></tr>
       <tr><td class=colnames>Ubuntu</td><td class=colnames>#{ubuntuNodes}</td></tr>
       <tr><td class=colnames>CentOS</td><td class=colnames>#{centosNodes}</td></tr>
@@ -120,7 +133,7 @@ border:.5pt solid;background:#000000;
 </table>"
 
     contentTop = "<table border=0 cellpadding=0 cellspacing=0 width=100% style=\'border-collapse:collapse;\'>
-<tr><th class=heading>FQDN</th><th class=heading>Environment</th><th class=heading>Roles</th><th class=heading>Run List</th><th class=heading>Platform</th><th class=heading>Version</th><th class=heading>Kernel</th><th class=heading>CPUs</th><th class=heading>Memory</th><th class=heading>Swap</th><th class=heading>IP</th><th class=heading>MAC</th><th class=heading>Gateway</th><th class=heading>Chef Version</th></tr>"
+<tr><th class=heading>FQDN</th><th class=heading>Chef</th><th class=heading>Env.</th><th class=heading>Roles</th><th class=heading>Run List</th><th class=heading>Platform</th><th class=heading>Version</th><th class=heading>Kernel</th><th class=heading>CPUs</th><th class=heading>Memory</th><th class=heading>Swap</th><th class=heading>IP</th><th class=heading>MAC</th><th class=heading>Gateway</th><th class=heading>Filesystem</th></tr>"
     footer = "</table>\n</body>\n</html>\n"
 
     print "#{pageHeader}\n#{countsTop}\n#{contentTop}\n#{content}\n#{footer}"
