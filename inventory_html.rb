@@ -74,20 +74,22 @@ border:.5pt solid;background:#000000;
       node = n unless n.nil?
       totalNodes += 1
 
-        fqdn = node['fqdn'] || 'empty'
-        environment = node.chef_environment || 'empty'
-        roles = node['roles'] || 'empty'
-        run_list = node.run_list || 'empty'
-        platform = node['platform'] || 'empty'
-        platform_ver = node['platform_version'] || 'empty'
-        kernel = node.fetch('kernel', {})['release'] || 'empty'
-        cpu_num = node['cpu']['total'] || 'empty'
-        ram = node.fetch('memory', {})['total'] || 'empty'
-        swap = node.fetch('memory', {}).fetch('swap', {})['total'] || 'empty'
-        ip = node['ipaddress'] || 'empty'
-        macaddress = node['macaddress'] || 'empty'
-        df_gateway = node.fetch('network', {})['default_gateway'] || 'empty'
-        chef_version = node.fetch('chef_packages', {}).fetch('chef', {})['version'] || 'empty'
+        fqdn = node['fqdn'] || 'n/a'
+        environment = node.chef_environment || 'n/a'
+        virtualization = node.fetch('virtualization', {})['role'] || 'n/a'
+        virt_type = node.fetch('virtualization', {})['system'] || 'n/a'
+        roles = node['roles'] || 'n/a'
+        run_list = node.run_list || 'n/a'
+        platform = node['platform'] || 'n/a'
+        platform_ver = node['platform_version'] || 'n/a'
+        kernel = node.fetch('kernel', {})['release'] || 'n/a'
+        cpu_num = node['cpu']['total'] || 'n/a'
+        ram = node.fetch('memory', {})['total'] || 'n/a'
+        swap = node.fetch('memory', {}).fetch('swap', {})['total'] || 'n/a'
+        ip = node['ipaddress'] || 'n/a'
+        macaddress = node['macaddress'] || 'n/a'
+        df_gateway = node.fetch('network', {})['default_gateway'] || 'n/a'
+        chef_version = node.fetch('chef_packages', {}).fetch('chef', {})['version'] || 'n/a'
 
         all_fs = node.fetch('filesystem', {})
 
@@ -113,7 +115,7 @@ border:.5pt solid;background:#000000;
     end
 
     content += "  <tr>
-  <td class=colnames>#{fqdn}</td><td class=colnames>#{chef_version}</td><td class=colnames>#{environment}</td><td class=colnames>#{roles}</td><td class=colnames>#{run_list}</td><td class=colnames>#{platform}</td><td class=colnames>#{platform_ver}</td><td class=colnames>#{kernel}</td><td class=colnames>#{cpu_num}</td><td class=colnames>#{ram}</td><td class=colnames>#{swap}</td><td class=colnames>#{ip}</td><td class=colnames>#{macaddress}</td><td class=colnames>#{df_gateway}</td><td class=colnames>#{filtered_fs}</td>
+  <td class=colnames>#{fqdn}</td><td class=colnames>#{chef_version}</td><td class=colnames>#{environment}</td><td class=colnames>#{virtualization}</td><td class=colnames>#{virt_type}</td><td class=colnames>#{roles}</td><td class=colnames>#{run_list}</td><td class=colnames>#{platform}</td><td class=colnames>#{platform_ver}</td><td class=colnames>#{kernel}</td><td class=colnames>#{cpu_num}</td><td class=colnames>#{ram}</td><td class=colnames>#{swap}</td><td class=colnames>#{ip}</td><td class=colnames>#{macaddress}</td><td class=colnames>#{df_gateway}</td><td class=colnames>#{filtered_fs}</td>
 </tr>\n"
       end
     countsTop = "<table border=0 cellpadding=0 cellspacing=0 style=\'border-collapse:collapse;\'>
@@ -133,7 +135,7 @@ border:.5pt solid;background:#000000;
 </table>"
 
     contentTop = "<table border=0 cellpadding=0 cellspacing=0 width=100% style=\'border-collapse:collapse;\'>
-<tr><th class=heading>FQDN</th><th class=heading>Chef</th><th class=heading>Env.</th><th class=heading>Roles</th><th class=heading>Run List</th><th class=heading>Platform</th><th class=heading>Version</th><th class=heading>Kernel</th><th class=heading>CPUs</th><th class=heading>Memory</th><th class=heading>Swap</th><th class=heading>IP</th><th class=heading>MAC</th><th class=heading>Gateway</th><th class=heading>Filesystem</th></tr>"
+<tr><th class=heading>FQDN</th><th class=heading>Chef</th><th class=heading>Env.</th><th class=heading>Virtualization</th><th class=heading>Virt. Type</th><th class=heading>Roles</th><th class=heading>Run List</th><th class=heading>Platform</th><th class=heading>Version</th><th class=heading>Kernel</th><th class=heading>CPUs</th><th class=heading>Memory</th><th class=heading>Swap</th><th class=heading>IP</th><th class=heading>MAC</th><th class=heading>Gateway</th><th class=heading>Filesystem</th></tr>"
     footer = "</table>\n</body>\n</html>\n"
 
     print "#{pageHeader}\n#{countsTop}\n#{contentTop}\n#{content}\n#{footer}"

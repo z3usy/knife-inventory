@@ -20,26 +20,28 @@ module Limelight
 
     def run
 
-      print "FQDN;Chef;Environment;Roles;Run List;Platform;Version;Kernel;CPUs;Memory;Swap;IP;MAC;Gateway;Filesystem\n"
+      print "FQDN;Chef;Environment;Virtualization;VM Type;Roles;Run List;Platform;Version;Kernel;CPUs;Memory;Swap;IP;MAC;Gateway;Filesystem\n"
 
       nodes = Hash.new
       Chef::Search::Query.new.search(:node, "name:*.*") do |n|
         node = n unless n.nil?
 
-        fqdn = node['fqdn'] || 'empty'
-        environment = node.chef_environment || 'empty'
-        roles = node['roles'] || 'empty'
-        run_list = node.run_list || 'empty'
-        platform = node['platform'] || 'empty'
-        platform_ver = node['platform_version'] || 'empty'
-        kernel = node.fetch('kernel', {})['release'] || 'empty'
-        cpu_num = node['cpu']['total'] || 'empty'
-        ram = node.fetch('memory', {})['total'] || 'empty'
-        swap = node.fetch('memory', {}).fetch('swap', {})['total'] || 'empty'
-        ip = node['ipaddress'] || 'empty'
-        macaddress = node['macaddress'] || 'empty'
-        df_gateway = node.fetch('network', {})['default_gateway'] || 'empty'
-        chef_version = node.fetch('chef_packages', {}).fetch('chef', {})['version'] || 'empty'
+        fqdn = node['fqdn'] || 'n/a'
+        environment = node.chef_environment || 'n/a'
+        virtualization = node.fetch('virtualization', {})['role'] || 'n/a'
+        virt_type = node.fetch('virtualization', {})['system'] || 'n/a'
+        roles = node['roles'] || 'n/a'
+        run_list = node.run_list || 'n/a'
+        platform = node['platform'] || 'n/a'
+        platform_ver = node['platform_version'] || 'n/a'
+        kernel = node.fetch('kernel', {})['release'] || 'n/a'
+        cpu_num = node['cpu']['total'] || 'n/a'
+        ram = node.fetch('memory', {})['total'] || 'n/a'
+        swap = node.fetch('memory', {}).fetch('swap', {})['total'] || 'n/a'
+        ip = node['ipaddress'] || 'n/a'
+        macaddress = node['macaddress'] || 'n/a'
+        df_gateway = node.fetch('network', {})['default_gateway'] || 'n/a'
+        chef_version = node.fetch('chef_packages', {}).fetch('chef', {})['version'] || 'n/a'
 
         all_fs = node.fetch('filesystem', {})
 
@@ -54,7 +56,7 @@ module Limelight
           end.sort_by { |key, value| fs_fields.index(key) }]
         end
 
-        print "#{fqdn};#{chef_version};#{environment};#{roles};#{run_list};#{platform};#{platform_ver};#{kernel};#{cpu_num};#{ram};#{swap};#{ip};#{macaddress};#{df_gateway};#{filtered_fs}\n"
+        print "#{fqdn};#{chef_version};#{environment};#{virtualization};#{virt_type};#{roles};#{run_list};#{platform};#{platform_ver};#{kernel};#{cpu_num};#{ram};#{swap};#{ip};#{macaddress};#{df_gateway};#{filtered_fs}\n"
 
       end
     end
