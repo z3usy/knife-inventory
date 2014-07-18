@@ -13,8 +13,7 @@ class InventoryCsv < Chef::Knife
   banner "knife inventory csv"
 
   def run
-
-    print "FQDN;Chef;Environment;Virtualization;VM Type;Roles;Run List;Platform;Version;Kernel;CPUs;Memory;Swap;IP;MAC;Gateway;Filesystem\n"
+    print "FQDN;Chef;Environment;Virtualization;VM Type;Platform;Version;Kernel;CPUs;Memory;Swap;IP;MAC;Gateway;Roles;Run List;Filesystem\n"
 
     nodes = Hash.new
     Chef::Search::Query.new.search(:node, "name:*.*") do |n|
