@@ -91,7 +91,7 @@ class InventoryHtml < Chef::Knife
 
     pageHeader = "
     <html>\n
-      <head>\n<MEAT HTTP-EQUIV=PRAGMA CONTENT=NO-CACHE>
+      <head>\n<META HTTP-EQUIV=PRAGMA CONTENT=NO-CACHE>
         <style type='text/css'>\n
           .heading {
             color:#3366FF;
