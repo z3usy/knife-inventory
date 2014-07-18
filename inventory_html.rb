@@ -9,24 +9,24 @@ class InventoryHtml < Chef::Knife
     require 'chef/node'
     require 'chef/search/query'
   end
-  
+
   banner "knife inventory html"
-  
+
   def run
     nodes = Hash.new
     content = ""
-  
+
     ubuntuNodes = 0
     centosNodes = 0
     redhatNodes = 0
     unknownOS = 0
-  
+
     totalNodes = 0
-  
+
     Chef::Search::Query.new.search(:node, "name:*") do |n|
       node = n unless n.nil?
       totalNodes += 1
-  
+
       fqdn = node['fqdn'] || 'n/a'
       chef_version = node.fetch('chef_packages', {}).fetch('chef', {})['version'] || 'n/a'
       environment = node.chef_environment || 'n/a'
@@ -43,20 +43,20 @@ class InventoryHtml < Chef::Knife
       df_gateway = node.fetch('network', {})['default_gateway'] || 'n/a'
       roles = node['roles'] || 'n/a'
       run_list = node.run_list || 'n/a'
-  
+
       all_fs = node.fetch('filesystem', {})
-  
+
       filtered_fs = all_fs.select do |volume, properties|
         %w[xfs ext3 ext4].include?(properties['fs_type'])
       end
-  
+
       fs_fields = %w[mount fs_type kb_size percent_used]
       filtered_fs.each do |volume, properties|
         filtered_fs[volume] = Hash[properties.select do |key, value|
           fs_fields.include?(key)
         end.sort_by { |key, value| fs_fields.index(key) }]
       end
-  
+
       if platform == "ubuntu"
         ubuntuNodes += 1
       elsif platform == "centos"
@@ -132,7 +132,7 @@ class InventoryHtml < Chef::Knife
         <title>Chef Inventory</title>
       </head>\n
     <body>"
-    
+
     countsTop = "
     <table border=0 cellpadding=0 cellspacing=0 style=\'border-collapse:collapse;\'>
       <tr>
@@ -153,7 +153,7 @@ class InventoryHtml < Chef::Knife
         </td>
       </tr>
     </table>"
-    
+
     contentTop = "
     <table border=0 cellpadding=0 cellspacing=0 width=100% style=\'border-collapse:collapse;\'>
     <tr>
@@ -174,8 +174,8 @@ class InventoryHtml < Chef::Knife
       <th class=heading>Roles</th>
       <th class=heading>Run List</th>
       <th class=heading>Filesystem</th>
-    </tr>"  
-    footer = "</table>\n</body>\n</html>\n"  
+    </tr>"
+    footer = "</table>\n</body>\n</html>\n"
     print "#{pageHeader}\n#{countsTop}\n#{contentTop}\n#{content}\n#{footer}"
   end
 end
