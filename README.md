@@ -26,6 +26,14 @@ knife inventory -h > chef-inventory_$(date +%Y-%m-%d).html
 or
 
 ```
-knife inventory -c | sed 's/,//g' | sed 's/;/,/g' | mail -s "Chef Inventory for $(date +%Y-%m-%d)" user@example.com
-knife inventory -h | mail -s "Chef Inventory HTML for $(date +%Y-%m-%d)" user@example.com
+knife inventory -c | sed 's/,//g' | sed 's/;/,/g' | \
+mail -s "Chef Inventory for $(date +%Y-%m-%d)" user@example.com
+```
+
+or
+
+```
+knife inventory -h > /tmp/chef-inventory_$(date +%Y-%m-%d).html; \
+echo "Inventory attached." | \
+mail -a /tmp/chef-inventory_$(date +%Y-%m-%d).html -s "Chef Inventory HTML for $(date +%Y-%m-%d)" user@example.com
 ```
