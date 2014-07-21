@@ -35,5 +35,5 @@ or
 ```
 knife inventory -h > /tmp/chef-inventory_$(date +%Y-%m-%d).html; \
 echo "Please see the attachment" | \
-mail -s "Chef Inventory HTML for $(date +%Y-%m-%d)" -a /tmp/chef-inventory_$(date +%Y-%m-%d).html user@example.com
+mail -s "Chef Inventory HTML for $(date +%Y-%m-%d)" user@example.com < /tmp/chef-inventory_$(date +%Y-%m-%d).html
 ```
