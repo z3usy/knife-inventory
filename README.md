@@ -7,25 +7,25 @@ A Chef Knife Plugin to Inventory Your Environment and Output to CSV or HTML
 
 ## Installation
 
-Copy these files to the plugin directory of your chef installation.
+Copy the inventory.rb file to the plugin directory of your chef installation.
 
 ## Usage
 
 ```
-knife inventory csv
-knife inventory html
+knife inventory -c
+knife inventory -h
 ```
 
 Results will print to STDOUT, use redirection to output to file or generate an email, for example...
 
 ```
-knife inventory csv | sed 's/,//g' | sed 's/;/,/g' > chef-inventory_$(date +%Y-%m-%d).csv
-knife inventory html > chef-inventory_$(date +%Y-%m-%d).html
+knife inventory -c | sed 's/,//g' | sed 's/;/,/g' > chef-inventory_$(date +%Y-%m-%d).csv
+knife inventory -h > chef-inventory_$(date +%Y-%m-%d).html
 ```
 
 or
 
 ```
-knife inventory csv | sed 's/,//g' | sed 's/;/,/g' | mail -s "Chef Inventory for $(date +%Y-%m-%d)" user@example.com
-knife inventory html | mail -s "Chef Inventory HTML for $(date +%Y-%m-%d)" user@example.com
+knife inventory -c | sed 's/,//g' | sed 's/;/,/g' | mail -s "Chef Inventory for $(date +%Y-%m-%d)" user@example.com
+knife inventory -h | mail -s "Chef Inventory HTML for $(date +%Y-%m-%d)" user@example.com
 ```
