@@ -16,25 +16,9 @@ knife inventory -c
 knife inventory -h
 ```
 
-Results will print to STDOUT, use redirection to output to file or generate an email, for example...
+Results will print to STDOUT, use redirection to output to file, for example...
 
 ```
 knife inventory -c | sed 's/,//g' | sed 's/;/,/g' > chef-inventory_$(date +%Y-%m-%d).csv
 knife inventory -h > chef-inventory_$(date +%Y-%m-%d).html
-```
-
-or
-
-```
-knife inventory -c | sed 's/,//g' | sed 's/;/,/g' > /tmp/chef-inventory_$(date +%Y-%m-%d).csv; \
-echo "Please see the attachment" | \
-mutt -s "Chef Inventory CSV for $(date +%Y-%m-%d)" -a /tmp/chef-inventory_$(date +%Y-%m-%d).csv user@example.com
-```
-
-or
-
-```
-knife inventory -h > /tmp/chef-inventory_$(date +%Y-%m-%d).html; \
-echo "Please see the attachment" | \
-mutt -s "Chef Inventory HTML for $(date +%Y-%m-%d)" -a /tmp/chef-inventory_$(date +%Y-%m-%d).html user@example.com
 ```
