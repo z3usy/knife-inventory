@@ -1,7 +1,6 @@
 require 'chef/knife'
 
-class Inventory < Chef::Knife
-
+class Inventory < Chef::Knife # rubocop:disable ClassLength
   banner '
   knife inventory OPTIONS
     REQUIRED: -c or -h [output type]
@@ -28,22 +27,20 @@ class Inventory < Chef::Knife
   end
 
   def run
-
-    nodes = Hash.new
-    content = ""
-    ubuntuNodes = 0
-    centosNodes = 0
-    redhatNodes = 0
-    unknownOS = 0
-    totalNodes = 0
+    content = ''
+    ubuntu_nodes = 0
+    centos_nodes = 0
+    redhat_nodes = 0
+    unknown_nodes = 0
+    total_nodes = 0
 
     if config[:csv]
       print "FQDN;Chef;Environment;Virtualization;VM Type;Platform;Version;Kernel;CPUs;Memory;Swap;IP;MAC;Gateway;Roles;Run List;Filesystem\n"
     end
 
-    Chef::Search::Query.new.search(:node, "name:*") do |n|
+    Chef::Search::Query.new.search(:node, 'name:*') do |n|
       node = n unless n.nil?
-      totalNodes += 1
+      total_nodes += 1
 
       fqdn = node['fqdn'] || 'n/a'
       chef_version = node.fetch('chef_packages', {}).fetch('chef', {})['version'] || 'n/a'
@@ -63,25 +60,25 @@ class Inventory < Chef::Knife
       run_list = node.run_list || 'n/a'
       all_fs = node.fetch('filesystem', {})
 
-      filtered_fs = all_fs.select do |volume, properties|
+      filtered_fs = all_fs.select do |_volume, properties|
         %w[xfs ext3 ext4].include?(properties['fs_type'])
       end
 
       fs_fields = %w[mount fs_type kb_size percent_used]
-      filtered_fs.each do |volume, properties|
-        filtered_fs[volume] = Hash[properties.select do |key, value|
+      filtered_fs.each do |_volume, properties|
+        filtered_fs[_volume] = Hash[properties.select do |key, _value|
           fs_fields.include?(key)
-        end.sort_by { |key, value| fs_fields.index(key) }]
+        end.sort_by { |key, _value| fs_fields.index(key) }]
       end
 
-      if platform == "ubuntu"
-        ubuntuNodes += 1
-      elsif platform == "centos"
-        centosNodes += 1
-      elsif platform == "redhat"
-        redhatNodes += 1
+      if platform == 'ubuntu'
+        ubuntu_nodes += 1
+      elsif platform == 'centos'
+        centos_nodes += 1
+      elsif platform == 'redhat'
+        redhat_nodes += 1
       else
-        unknownOS += 1
+        unknown_nodes += 1
       end
 
       if config[:csv]
@@ -113,7 +110,7 @@ class Inventory < Chef::Knife
     end
 
     if config[:html]
-      pageHeader = "
+      page_header = "
       <html>\n
         <head>\n<META HTTP-EQUIV=PRAGMA CONTENT=NO-CACHE>
           <style type='text/css'>\n
@@ -156,7 +153,7 @@ class Inventory < Chef::Knife
           <title>Chef Inventory</title>
         </head>\n
       <body>"
-      countsTop = "
+      counts_top = "
       <table border=0 cellpadding=0 cellspacing=0 style=\'border-collapse:collapse;\'>
         <tr>
           <td>
@@ -166,17 +163,17 @@ class Inventory < Chef::Knife
             &nbsp;&nbsp;&nbsp;&nbsp;
           <td>
             <table border=0 cellpadding=3 cellspacing=10 width=100% style=\'border-collapse:collapse;\'>
-              <tr><td class=colnames>Total Servers</td><td class=colnames>#{totalNodes}</td></tr>
+              <tr><td class=colnames>Total Servers</td><td class=colnames>#{total_nodes}</td></tr>
               <tr><td class=colname>OS</td><td class=colname>Count</td></tr>
-              <tr><td class=colnames>Ubuntu</td><td class=colnames>#{ubuntuNodes}</td></tr>
-              <tr><td class=colnames>CentOS</td><td class=colnames>#{centosNodes}</td></tr>
-              <tr><td class=colnames>RedHat</td><td class=colnames>#{redhatNodes}</td></tr>
-              <tr><td class=colnames>Unknown</td><td class=colnames>#{unknownOS}</td></tr>
+              <tr><td class=colnames>Ubuntu</td><td class=colnames>#{ubuntu_nodes}</td></tr>
+              <tr><td class=colnames>CentOS</td><td class=colnames>#{centos_nodes}</td></tr>
+              <tr><td class=colnames>RedHat</td><td class=colnames>#{redhat_nodes}</td></tr>
+              <tr><td class=colnames>Unknown</td><td class=colnames>#{unknown_nodes}</td></tr>
             </table>
           </td>
         </tr>
       </table>"
-      contentTop = "
+      content_top = "
       <table border=0 cellpadding=0 cellspacing=0 width=100% style=\'border-collapse:collapse;\'>
       <tr>
         <th class=heading>FQDN</th>
@@ -198,7 +195,7 @@ class Inventory < Chef::Knife
         <th class=heading>Filesystem</th>
       </tr>"
       footer = "</table>\n</body>\n</html>\n"
-      print "#{pageHeader}\n#{countsTop}\n#{contentTop}\n#{content}\n#{footer}"
+      print "#{page_header}\n#{counts_top}\n#{content_top}\n#{content}\n#{footer}"
     end
   end
 end
