@@ -7,7 +7,7 @@ A Chef Knife Plugin to Inventory Your Environment and Output to CSV or HTML
 
 ## Installation
 
-Copy the inventory.rb file to the plugin directory of your chef installation.
+Copy the *inventory.rb* file to the plugin directory of your chef installation.
 
 ## Usage
 
