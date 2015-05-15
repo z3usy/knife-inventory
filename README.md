@@ -23,7 +23,8 @@ knife inventory -c | sed 's/,//g' | sed 's/;/,/g' > chef-inventory_$(date +%Y-%m
 knife inventory -h > chef-inventory_$(date +%Y-%m-%d).html
 ```
 
-## License
+Unlicense
+---------
 
 This is free and unencumbered software released into the public domain.
 
